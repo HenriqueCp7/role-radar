@@ -1,37 +1,81 @@
 import Creditos from "./Creditos"
 import Cartao from "./Cartao"
+import Loading from "./Loading"
+import React from "react"
 
-const App = () => {
+class App extends React.Component {
 
-    const estiloSubtitulo = { 
-        color: "black", 
-        fontSize: 18, 
-        fontFamily: "Arial",
-        textAlign: "center",
-        marginTop: "10px",
-        marginLeft: "30px"
+    state = {
+        latitude: null,
+        longitude: null,
+        horarioLocalizacao: null,
+        mensagemDeErro: null
     }
 
-    const obterAno = () => new Date().getFullYear()
-    return (
-        <div className="moldura">
-            <h1 className="titulo">
-                <i className="pi pi-map-marker" style={{marginRight: "10px"}}></i>
-                RolêRadar
-            </h1>
+    obterLocalizacao = () => {
+        navigator.geolocation.getCurrentPosition(
+            (posicao) => {
+                this.setState({
+                    latitude: posicao.coords.latitude,
+                    longitude: posicao.coords.longitude,
+                    horarioLocalizacao: Date.now(),
+                    mensagemDeErro: null
+                })
+            },
+            (erro) => {
+                console.log(erro)
 
-            <p style={estiloSubtitulo}>Descubra o que existe perto de você</p>
+                this.setState({
+                    mensagemDeErro: "Não foi possível obter sua localização. Libere o acesso no navegador e atualize a página."
+                })
+            }
+        )
+    }
 
-            <Creditos/>
+    componentDidMount() {
+        this.obterLocalizacao()
+    }
+
+    render() {
+        const estiloSubtitulo = {
+            color: "black",
+            fontSize: 18,
+            fontFamily: "Arial",
+            textAlign: "center",
+            marginTop: "10px",
+            marginLeft: "30px"
+        }
+
+        const obterAno = () => new Date().getFullYear()
+
+        const conteudoLocalizacao = 
+            !this.state.latitude && !this.state.mensagemDeErro ?
+                <Loading mensagem="Aguardando permissão de localização..." />
+            :
+            this.state.mensagemDeErro ?
+                <p>{this.state.mensagemDeErro}</p>
+            :
+                <p>Localização obtida: {this.state.latitude}, {this.state.longitude}</p>
             
-            <div className="ml-4 mt-4 w-4">
-                <Cartao cabecalho="Teste" children="Conteúdo do cartão" marginTop></Cartao>
+        return (
+            <div className="moldura">
+                <h1 className="titulo">
+                    <i className="pi pi-map-marker" style={{ marginRight: "10px" }}></i>
+                    RolêRadar
+                </h1>
+
+                <p style={estiloSubtitulo}>Descubra o que existe perto de você</p>
+
+                <Creditos />
+
+                <Cartao>
+                    {conteudoLocalizacao}
+                </Cartao>   
+
+                <footer className="footer">RolêRadar © {obterAno()}</footer>
             </div>
-            
-
-            <footer className="footer">RolêRadar © {obterAno()}</footer>
-        </div>
-    )
+        )
+    }
 }
 
 export default App
