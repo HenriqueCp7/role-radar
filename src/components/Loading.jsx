@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-class Loading extends React.Component {
+export default class Loading extends Component {
     render() {
         return (
             <div className="text-center">
@@ -16,5 +16,3 @@ class Loading extends React.Component {
 Loading.defaultProps = {
     mensagem: "Carregando..."
 }
-
-export default Loading
