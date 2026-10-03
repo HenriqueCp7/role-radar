@@ -1,6 +1,7 @@
 import Creditos from "./Creditos"
 import Cartao from "./Cartao"
 import Loading from "./Loading"
+import MeuPonto from "./MeuPonto"
 import React from "react"
 
 class App extends React.Component {
@@ -46,16 +47,7 @@ class App extends React.Component {
             marginLeft: "30px"
         }
 
-        const obterAno = () => new Date().getFullYear()
-
-        const conteudoLocalizacao = 
-            !this.state.latitude && !this.state.mensagemDeErro ?
-                <Loading mensagem="Aguardando permissão de localização..." />
-            :
-            this.state.mensagemDeErro ?
-                <p>{this.state.mensagemDeErro}</p>
-            :
-                <p>Localização obtida: {this.state.latitude}, {this.state.longitude}</p>
+        const obterAno = () => new Date().getFullYear()       
             
         return (
             <div className="moldura">
@@ -68,10 +60,22 @@ class App extends React.Component {
 
                 <Creditos />
 
-                <Cartao>
-                    {conteudoLocalizacao}
-                </Cartao>   
-
+                    <Cartao cabecalho="Você está aqui">
+                        {
+                            !this.state.latitude && !this.state.mensagemDeErro ?
+                                <Loading mensagem="Aguardando permissão de localização..." />
+                            :
+                            this.state.mensagemDeErro ?
+                                <p>{this.state.mensagemDeErro}</p>
+                            :
+                            <MeuPonto
+                                latitude={this.state.latitude}
+                                longitude={this.state.longitude}
+                                horarioLocalizacao={this.state.horarioLocalizacao}
+                                onAtualizar={this.obterLocalizacao}
+                            />
+                        }           
+                    </Cartao>   
                 <footer className="footer">RolêRadar © {obterAno()}</footer>
             </div>
         )
