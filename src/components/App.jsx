@@ -4,7 +4,7 @@ import Loading from "./Loading"
 import MeuPonto from "./MeuPonto"
 import React from "react"
 import geoapifyClient from "../utils/geoapifyClient"
-import { Button } from "@primereact/ui/button"
+import Busca from "./Busca"
 
 class App extends React.Component {
 
@@ -66,7 +66,7 @@ class App extends React.Component {
         const obterAno = () => new Date().getFullYear()       
             
         return (
-            <div className="moldura">
+            <div>
                 <h1 className="titulo">
                     <i className="pi pi-map-marker" style={{ marginRight: "10px" }}></i>
                     RolêRadar
@@ -75,28 +75,33 @@ class App extends React.Component {
                 <p style={estiloSubtitulo}>Descubra o que existe perto de você</p>
 
                 <Creditos />
+                    <div className="grid">
+                        <div className="col-5 mt-2 ml-5">
+                            <Cartao cabecalho="Você está aqui">
+                                {
+                                    !this.state.latitude && !this.state.mensagemDeErro ?
+                                        <Loading mensagem="Aguardando permissão de localização..." />
+                                    :
+                                    this.state.mensagemDeErro ?
+                                        <p>{this.state.mensagemDeErro}</p>
+                                    :
+                                    <MeuPonto
+                                        latitude={this.state.latitude}
+                                        longitude={this.state.longitude}
+                                        horarioLocalizacao={this.state.horarioLocalizacao}
+                                        onAtualizar={this.obterLocalizacao}
+                                    />
+                                }           
+                            </Cartao>
 
-                    <Cartao cabecalho="Você está aqui">
-                        {
-                            !this.state.latitude && !this.state.mensagemDeErro ?
-                                <Loading mensagem="Aguardando permissão de localização..." />
-                            :
-                            this.state.mensagemDeErro ?
-                                <p>{this.state.mensagemDeErro}</p>
-                            :
-                            <MeuPonto
-                                latitude={this.state.latitude}
-                                longitude={this.state.longitude}
-                                horarioLocalizacao={this.state.horarioLocalizacao}
-                                onAtualizar={this.obterLocalizacao}
-                            />
-                        }           
-                    </Cartao>   
-                    
-                    <Button onClick={() => this.onBuscaRealizada('catering.cafe', 1000)} className="mt-5 w-full">
-                        Testar Busca
-                    </Button>
+                            <div className="mt-5">
+                                <Cartao cabecalho="O que você procura?">
 
+                                        <Busca onBuscaRealizada={this.onBuscaRealizada}/>
+                                </Cartao>
+                            </div>
+                        </div>
+                    </div>
                 <footer className="footer">RolêRadar © {obterAno()}</footer>
             </div>
         )

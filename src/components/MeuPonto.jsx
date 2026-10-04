@@ -43,9 +43,9 @@ export default class MeuPonto extends Component {
 
                     <p>Localização obtida há {segundos} s</p>
 
-                    <Button icon="pi pi-refresh"
-                        onClick={this.props.onAtualizar}>
-                        "Atualizar localização"
+                    <Button onClick={this.props.onAtualizar}>
+                        <i className='pi pi-refresh mr-2'></i>
+                        Atualizar localização
                     </Button>                                  
       </div>
     )
