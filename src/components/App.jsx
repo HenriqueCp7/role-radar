@@ -5,6 +5,7 @@ import MeuPonto from "./MeuPonto"
 import React from "react"
 import geoapifyClient from "../utils/geoapifyClient"
 import Busca from "./Busca"
+import ListaLugares from "./ListaLugares"
 
 class App extends React.Component {
 
@@ -12,7 +13,8 @@ class App extends React.Component {
         latitude: null,
         longitude: null,
         horarioLocalizacao: null,
-        mensagemDeErro: null
+        mensagemDeErro: null,
+        lugares: null
     }
 
     obterLocalizacao = () => {
@@ -45,12 +47,15 @@ class App extends React.Component {
                 categories: categoria,
                 filter: `circle:${this.state.longitude},${this.state.latitude},${raio}`,
                 bias: `proximity:${this.state.longitude},${this.state.latitude}`,
-                limit: 20
-                }
+                limit: 20,
+
+            }
         })
-        .then((result) => {
-            console.log(result.data.features)
-        })
+            .then((result) => {
+                this.setState({
+                    lugares: result.data.features
+                })
+            })
     }
 
     render() {
@@ -63,8 +68,8 @@ class App extends React.Component {
             marginLeft: "30px"
         }
 
-        const obterAno = () => new Date().getFullYear()       
-            
+        const obterAno = () => new Date().getFullYear()
+
         return (
             <div>
                 <h1 className="titulo">
@@ -72,37 +77,53 @@ class App extends React.Component {
                     RolêRadar
                 </h1>
 
-                <p style={estiloSubtitulo}>Descubra o que existe perto de você</p>
+                <p style={estiloSubtitulo}>
+                    Descubra o que existe perto de você
+                </p>
 
                 <Creditos />
-                    <div className="grid">
-                        <div className="col-5 mt-2 ml-5">
-                            <Cartao cabecalho="Você está aqui">
-                                {
-                                    !this.state.latitude && !this.state.mensagemDeErro ?
-                                        <Loading mensagem="Aguardando permissão de localização..." />
+
+                <div className="grid">
+                    <div className="col-6">
+                        <Cartao cabecalho="Você está aqui">
+                            {
+                                !this.state.latitude && !this.state.mensagemDeErro ?
+                                    <Loading mensagem="Aguardando permissão de localização..." />
                                     :
                                     this.state.mensagemDeErro ?
                                         <p>{this.state.mensagemDeErro}</p>
-                                    :
-                                    <MeuPonto
-                                        latitude={this.state.latitude}
-                                        longitude={this.state.longitude}
-                                        horarioLocalizacao={this.state.horarioLocalizacao}
-                                        onAtualizar={this.obterLocalizacao}
-                                    />
-                                }           
-                            </Cartao>
+                                        :
+                                        <MeuPonto
+                                            latitude={this.state.latitude}
+                                            longitude={this.state.longitude}
+                                            horarioLocalizacao={this.state.horarioLocalizacao}
+                                            onAtualizar={this.obterLocalizacao}
+                                        />
+                            }
+                        </Cartao>
 
-                            <div className="mt-5">
-                                <Cartao cabecalho="O que você procura?">
-
-                                        <Busca onBuscaRealizada={this.onBuscaRealizada}/>
-                                </Cartao>
-                            </div>
-                        </div>
+                        <Cartao cabecalho="O que você procura?">
+                            <Busca onBuscaRealizada={this.onBuscaRealizada} />
+                        </Cartao>
                     </div>
-                <footer className="footer">RolêRadar © {obterAno()}</footer>
+
+                    <div className="col-6">
+                        {
+                            this.state.lugares === null ?
+                                null
+                            :
+                            this.state.lugares.length === 0 ?
+                                <p>Nenhum lugar encontrado. Tente aumentar o raio.</p>
+                            :
+                                <ListaLugares lugares={this.state.lugares} />
+                        }
+                    </div>
+
+                </div>
+
+                <footer className="footer">
+                    RolêRadar © {obterAno()}
+                </footer>
             </div>
         )
     }
