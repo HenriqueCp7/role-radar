@@ -3,6 +3,8 @@ import Cartao from "./Cartao"
 import Loading from "./Loading"
 import MeuPonto from "./MeuPonto"
 import React from "react"
+import geoapifyClient from "../utils/geoapifyClient"
+import { Button } from "@primereact/ui/button"
 
 class App extends React.Component {
 
@@ -35,6 +37,20 @@ class App extends React.Component {
 
     componentDidMount() {
         this.obterLocalizacao()
+    }
+
+    onBuscaRealizada = (categoria, raio) => {
+        geoapifyClient.get("/places", {
+            params: {
+                categories: categoria,
+                filter: `circle:${this.state.longitude},${this.state.latitude},${raio}`,
+                bias: `proximity:${this.state.longitude},${this.state.latitude}`,
+                limit: 20
+                }
+        })
+        .then((result) => {
+            console.log(result.data.features)
+        })
     }
 
     render() {
@@ -76,6 +92,11 @@ class App extends React.Component {
                             />
                         }           
                     </Cartao>   
+                    
+                    <Button onClick={() => this.onBuscaRealizada('catering.cafe', 1000)} className="mt-5 w-full">
+                        Testar Busca
+                    </Button>
+
                 <footer className="footer">RolêRadar © {obterAno()}</footer>
             </div>
         )
