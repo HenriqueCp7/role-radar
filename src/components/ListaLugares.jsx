@@ -1,4 +1,3 @@
-import React, { Component } from 'react'
 import Lugar from './Lugar'
 
 export default function ListaLugares({lugares}) {
