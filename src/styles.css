@@ -15,9 +15,8 @@ html, body {
 
 .footer {
     color: black;
-    font-size: 15;
+    font-size: 15px;
     text-align: center;
-    margin-top: auto;
 }
 
 .btn-contornado {

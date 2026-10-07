@@ -54,11 +54,10 @@ class App extends React.Component {
 
         geoapifyClient.get("/places", {
             params: {
-                categories: categoria,
-                filter: `circle:${this.state.longitude},${this.state.latitude},${raio}`,
-                bias: `proximity:${this.state.longitude},${this.state.latitude}`,
-                limit: 20,
-
+                    categories: categoria,
+                    filter: `circle:${this.state.longitude},${this.state.latitude},${raio}`,
+                    bias: `proximity:${this.state.longitude},${this.state.latitude}`,
+                    limit: 20
                 }
             })
             .then((result) => {
@@ -104,9 +103,10 @@ class App extends React.Component {
 
                 <Creditos />
 
-                <div className="grid">
+                <div className="grid mr-2 ml-2">
                     <div className="col-6">
-                        <Cartao cabecalho="Você está aqui">
+                        <div className="mt-6">
+                            <Cartao cabecalho="Você está aqui">
                             {
                                 !this.state.latitude && !this.state.mensagemDeErro ?
                                     <Loading mensagem="Aguardando permissão de localização..." />
@@ -122,43 +122,50 @@ class App extends React.Component {
                                         />
                             }
                         </Cartao>
-
-                        <Cartao cabecalho="O que você procura?">
-                            <Busca onBuscaRealizada={this.onBuscaRealizada} />
-                        </Cartao>
+                        </div>
+                        
+                        <div className="mt-5">
+                            <Cartao cabecalho="O que você procura?">
+                                <Busca onBuscaRealizada={this.onBuscaRealizada} />
+                            </Cartao>
+                        </div>
                     </div>
 
                     <div className="col-6">
                         {   
                             this.state.buscando ?
-                                <Loading mensagem="Procurando lugares..."/>
+                                    <Loading mensagem="Procurando lugares..."/>
                             : this.state.erroBusca ?
-                                <p>{this.state.erroBusca}</p>
+                                <p className="text-center">{this.state.erroBusca}</p>
                             : this.state.lugares === null ?
                                 null
                             : this.state.lugares.length === 0 ?
-                                <p>Nenhum lugar encontrado. Tente aumentar o raio.</p>
+                                    <p className="text-center">Nenhum lugar encontrado. Tente aumentar o raio.</p>         
                             :
                                 <div>
-                                    <p className="font-bold">
-                                        {this.state.lugares.length} lugares encontrados em até {this.state.raioBuscado}m
+                                    <p className="font-bold text-center">
+                                        {this.state.lugares.length} {this.state.lugares.length === 1 ? "lugar encontrado" : "lugares encontrados"} em até {this.state.raioBuscado} m
                                     </p>
                                     
-                                    <Cartao cabecalho="Radar">
-                                        <MapaRadar
-                                            latitude={this.state.latitude}
-                                            longitude={this.state.longitude}
-                                            lugares={this.state.lugares}
-                                        />
-                                    </Cartao>
-                                    <ListaLugares lugares={this.state.lugares} /> 
+                                    <div className="mt-3">
+                                        <Cartao cabecalho="Radar">
+                                            <MapaRadar
+                                                latitude={this.state.latitude}
+                                                longitude={this.state.longitude}
+                                                lugares={this.state.lugares}
+                                            />
+                                        </Cartao>
+                                    </div>
+
+                                    <div className="mt-5">
+                                        <ListaLugares lugares={this.state.lugares} /> 
+                                    </div>
                                 </div>
                         }
                     </div>
-
                 </div>
 
-                <footer className="footer">
+                <footer className="footer mt-3">
                     RolêRadar © {obterAno()}
                 </footer>
             </div>

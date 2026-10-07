@@ -24,7 +24,6 @@ export default class MeuPonto extends Component {
     }
 
   render() {
-    console.log("MeuPonto renderizou")
     console.log(this.props.latitude)
     console.log(this.props.longitude)
     const segundos = Math.floor(
