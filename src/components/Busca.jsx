@@ -55,7 +55,7 @@ export default class Busca extends Component {
               <Button 
                 type="button"
                 onClick={() => this.setState({categoria: categoria.chave})}
-                className={this.state.categoria === categoria.chave ? "w-full" : "w-full btn-contornado"}
+                className={this.state.categoria === categoria.chave ? "w-full btn-selecionado" : "w-full btn-normal "}
               >
                 {categoria.rotulo}
               </Button>

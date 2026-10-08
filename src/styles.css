@@ -19,8 +19,13 @@ html, body {
     text-align: center;
 }
 
-.btn-contornado {
-    background-color: white !important;
-    color: green !important;
-    border: 1px solid greenyellow !important;
+.p-button.btn-normal {
+    background-color: white ;
+    color: green;
+    border: 1px solid greenyellow;
+}
+
+.p-button.btn-selecionado {
+    background-color: #6ee7b7;
+    color: black;
 }
